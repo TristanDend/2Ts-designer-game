@@ -1,3 +1,23 @@
-# 2Ts-designer-game
+# OfficeJumper-designer-game
 # Tristan Dendorfer (tdendorf@udel.edu)
 # Tyron Quarshie (tyronq@udel.edu)
+
+We want to create a game where the user has to avoid obstacles and climb an infinitely 
+tall building. The goal is to survive as long as possible because the game times how long the 
+character has been alive. By the end, this game should get more difficult as the time passes and
+record the players best time.
+
+# Phase 1
+- [ ] Display game setting (building, floors, obstacles)
+- [ ] Create game character
+- [ ] Make character jump and move(left to right and right to left), user controls with keyboard
+
+# Phase 2
+- [ ] Collision with obstacles(new floor and dying)
+- [ ] Infinitely scrolling screen
+- [ ] Randomly generating obstacles
+
+# Phase 3
+- [ ] Timer that stops when character dies and displays best time
+- [ ] Game over screen
+- [ ] Game gets increasingly more difficult
