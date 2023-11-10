@@ -8,6 +8,9 @@ Worker_Speed = 5
 #Determines player character jump height
 Worker_Height = 50
 
+#Sets background image
+background_image("https://www.thomsonreuters.com/en-us/posts/wp-content/uploads/sites/20/2016/04/open-floor-plan-office-800x450.jpg")
+
 @dataclass
 class World:
     player_character: DesignerObject
@@ -77,6 +80,8 @@ def player_border_stop(world: World):
         move_player_right(world)
     if world.player_character.y < 20:
         world.player_character.y = 20
+    elif world.player_character.y > get_height() - 18:
+        world.player_character.y = get_height() - 18
 
 when("starting", create_world)
 when("updating", move_player_horizontal)
