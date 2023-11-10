@@ -1,4 +1,5 @@
 from designer import *
+
 from dataclasses import dataclass
 
 #Determines player character speed
@@ -11,10 +12,15 @@ Worker_Height = 50
 class World:
     player_character: DesignerObject
     player_speed: int
+    building: DesignerObject
 
 def create_world() -> World:
     """ Creates the game world """
-    return World(create_player(), Worker_Speed)
+    return World(create_player(), Worker_Speed, create_lines())
+def create_lines() -> DesignerObject:
+    lines = line("black", 0,get_height()-Worker_Height,get_width(),get_height()-Worker_Height,2)
+    return lines
+
 
 def create_player() -> DesignerObject:
     """ Creates the player character """
