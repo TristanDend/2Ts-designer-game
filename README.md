@@ -8,9 +8,9 @@ character has been alive. By the end, this game should get more difficult as the
 record the players best time.
 
 # Phase 1
-- [ ] Display game setting (building, floors, obstacles)
-- [ ] Create game character
-- [ ] Make character jump and move(left to right and right to left), user controls with keyboard
+- [x] Display game setting (building, floors, obstacles)
+- [x] Create game character
+- [x] Make character jump and move(left to right and right to left), user controls with keyboard
 
 # Phase 2
 - [ ] Collision with obstacles(new floor and dying)
