@@ -18,6 +18,7 @@ def create_world() -> World:
     """ Creates the game world """
     return World(create_player(), Worker_Speed, create_lines())
 def create_lines() -> DesignerObject:
+    """ Creates starting point for character """
     lines = line("black", 0,get_height()-Worker_Height,get_width(),get_height()-Worker_Height,2)
     return lines
 
