@@ -49,6 +49,10 @@ def player_jump(world: World):
     """ Allows player to jump """
     world.player_character.y -= Worker_Height
 
+def player_down(world: World):
+    """ Allows player to fall """
+    world.player_character.y += Worker_Height
+
 def control_player_horizontal(world: World, key: str):
     """ Player controls character moving left and right """
     if key == "left":
@@ -61,6 +65,10 @@ def control_player_jump(world: World, key: str):
     if key == "space":
         player_jump(world)
 
+def control_player_down(world: World, key: str):
+    """ Controls player to go down"""
+    if key == "down":
+        player_down(world)
 def player_border_stop(world: World):
     """ Stops player from going off screen """
     if world.player_character.x > get_width() - 5:
@@ -75,4 +83,5 @@ when("updating", move_player_horizontal)
 when("typing", control_player_horizontal)
 when("typing", control_player_jump)
 when("updating", player_border_stop)
+when("typing", control_player_down)
 start()
