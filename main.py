@@ -1,6 +1,8 @@
 from designer import *
 from dataclasses import dataclass
+from random import randint
 import pygame
+
 
 #Determines player character speed
 Worker_Speed = 10
@@ -11,22 +13,61 @@ Worker_Height = 0
 #Jumping Variable
 jumping = False
 
+#Determines how fast obstacles fall
+Obstacles_fall_speed = 5
+
 #Sets background image
 background_image("https://www.thomsonreuters.com/en-us/posts/wp-content/uploads/sites/20/2016/04/open-floor-plan-office-800x450.jpg")
 
 @dataclass
 class World:
     player_character: DesignerObject
-    ground: DesignerObject
+    obstacles: list[DesignerObject]
 
 def create_world() -> World:
     """ Creates the game world """
-    return World(create_player(), create_ground())
+    return World(create_player(), [])
 
 def create_ground() -> DesignerObject:
     """ Creates starting point for character """
-    ground = rectangle("darkgray", get_width() + get_width() + 40, 15, -20, get_height())
-    return ground
+
+    lines = line("black", 0,get_height()-Worker_Height,get_width(),get_height()-Worker_Height,2)
+    return lines
+
+def create_obstacles() -> DesignerObject:
+    """ Creates obstacles for the player """
+    obstacle = emoji("🔻")
+    obstacle.scale_x = 1.5
+    obstacle.scale_y = 1.5
+    obstacle.x = randint(0,get_width())
+    obstacle.y = 0
+    return obstacle
+
+def make_obstacles(world: World):
+    cap_obstacles = len(world.obstacles) < 11
+    random_chance = randint(1, 75) == 50
+    if cap_obstacles and random_chance:
+        world.obstacles.append(create_obstacles())
+
+def drop_obstacles(world: World):
+    for obstacle in world.obstacles:
+        obstacle.y += Obstacles_fall_speed
+
+def destroy_obstacles(world: World):
+    kept = []
+    for obstacle in world.obstacles:
+        if obstacle.y < get_height():
+            kept.append(obstacle)
+        else:
+            destroy(obstacle)
+    world.obstacles = kept
+def collide_with_obstacle(world: World):
+    for obstacle in world.obstacles:
+        if colliding(obstacle, world.player_character):
+            return True
+
+def game_over(world: World):
+    world.text = "GAME OVER"
 
 def create_player() -> DesignerObject:
     """ Creates the player character """
@@ -97,5 +138,10 @@ when("updating", move_player)
 when("typing", control_player_jump)
 when("updating", player_jump)
 when("updating", player_border_stop)
+when("typing", control_player_down)
+when("updating", make_obstacles)
+when("updating", drop_obstacles)
+when("updating", destroy_obstacles)
+when(collide_with_obstacle, game_over, pause)
 when("updating", player_ground_check)
 start()

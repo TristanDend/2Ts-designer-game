@@ -14,7 +14,7 @@ record the players best time.
 - Phase 1 Demo Link: https://youtu.be/ESKKJJDGknc
 
 # Phase 2
-- [ ] Collision with obstacles(new floor and dying)
+- [x ] Collision with obstacles(new floor and dying)
 - [ ] Infinitely scrolling screen
 - [ ] Randomly generating obstacles
 
