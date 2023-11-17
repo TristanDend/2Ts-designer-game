@@ -63,8 +63,9 @@ def destroy_obstacles(world: World):
     world.obstacles = kept
 def collide_with_obstacle(world: World):
     for obstacle in world.obstacles:
-        if colliding(obstacle, world.player_character):
-            return True
+        if world.player_character.x >= obstacle.x and world.player_character.x <= obstacle.x+30:
+            if world.player_character.y >= obstacle.y and world.player_character.y <= obstacle.y+30:
+                return True
 
 def game_over(world: World):
     world.text = "GAME OVER"

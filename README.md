@@ -16,7 +16,7 @@ record the players best time.
 # Phase 2
 - [x] Collision with obstacles(new floor and dying)
 - [ ] Infinitely scrolling screen
-- [ ] Randomly generating obstacles
+- [x] Randomly generating obstacles
 
 # Phase 3
 - [ ] Timer that stops when character dies and displays best time
