@@ -127,10 +127,6 @@ def player_border_stop(world: World):
     elif world.player_character.y > get_height() - 18:
         world.player_character.y = get_height() - 18
 
-def player_ground_check(world: World):
-    """ Checks if player is on ground """
-    if colliding(world.player_character, world.ground):
-        world.player_character.y = world.ground.y - 25
 
 when("starting", create_world)
 when("typing", control_player_movement)
@@ -138,10 +134,8 @@ when("updating", move_player)
 when("typing", control_player_jump)
 when("updating", player_jump)
 when("updating", player_border_stop)
-when("typing", control_player_down)
 when("updating", make_obstacles)
 when("updating", drop_obstacles)
 when("updating", destroy_obstacles)
 when(collide_with_obstacle, game_over, pause)
-when("updating", player_ground_check)
 start()
