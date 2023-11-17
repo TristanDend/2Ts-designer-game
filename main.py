@@ -1,12 +1,17 @@
 from designer import *
 from dataclasses import dataclass
 from random import randint
+import pygame
+
 
 #Determines player character speed
-Worker_Speed = 5
+Worker_Speed = 10
 
 #Determines player character jump height
-Worker_Height = 50
+Worker_Height = 0
+
+#Jumping Variable
+jumping = False
 
 #Determines how fast obstacles fall
 Obstacles_fall_speed = 5
@@ -17,16 +22,15 @@ background_image("https://www.thomsonreuters.com/en-us/posts/wp-content/uploads/
 @dataclass
 class World:
     player_character: DesignerObject
-    player_speed: int
-    building: DesignerObject
     obstacles: list[DesignerObject]
 
 def create_world() -> World:
     """ Creates the game world """
-    return World(create_player(), Worker_Speed, create_lines(), [])
+    return World(create_player(), [])
 
-def create_lines() -> DesignerObject:
+def create_ground() -> DesignerObject:
     """ Creates starting point for character """
+
     lines = line("black", 0,get_height()-Worker_Height,get_width(),get_height()-Worker_Height,2)
     return lines
 
@@ -64,70 +68,80 @@ def collide_with_obstacle(world: World):
 
 def game_over(world: World):
     world.text = "GAME OVER"
+
 def create_player() -> DesignerObject:
     """ Creates the player character """
     player = emoji("🏃")
-    player.y = get_height() - 18
+    player.y = get_height() - 25
     player.flip_x = True
     return player
 
-def move_player_horizontal(world: World):
-    """ Moves player on the x axis """
-    world.player_character.x += world.player_speed
-
-def move_player_left(world: World):
-    """ Moves player left """
-    world.player_speed = -Worker_Speed
-    world.player_character.flip_x = False
-
-def move_player_right(world: World):
-    """ Moves player right """
-    world.player_speed = Worker_Speed
-    world.player_character.flip_x = True
-
-def player_jump(world: World):
-    """ Allows player to jump """
-    world.player_character.y -= Worker_Height
-
-def player_down(world: World):
-    """ Allows player to fall """
-    world.player_character.y += Worker_Height
-
-def control_player_horizontal(world: World, key: str):
-    """ Player controls character moving left and right """
+def control_player_movement(world: World, key: str):
+    if key == "right":
+        move_player(world)
     if key == "left":
-        move_player_left(world)
-    elif key == "right":
-        move_player_right(world)
+        move_player(world)
+
+def move_player(world: World):
+    global Worker_Speed
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        world.player_character.x -= Worker_Speed
+        world.player_character.flip_x = False
+    if keys[pygame.K_RIGHT]:
+        world.player_character.x += Worker_Speed
+        world.player_character.flip_x = True
 
 def control_player_jump(world: World, key: str):
-    """ Player controls character jump """
     if key == "space":
-        player_jump(world)
+        player_jump(world, key)
 
-def control_player_down(world: World, key: str):
-    """ Controls player to go down"""
-    if key == "down":
-        player_down(world)
+def player_jump(world: World, key: str):
+    global Worker_Height, jumping
+
+    if key == "space" and not jumping:
+        Worker_Height = -20  # Jumping impulse
+        jumping = True
+
+    # Update player position
+    world.player_character.y += Worker_Height
+
+    # Gravity
+    if jumping:
+        Worker_Height += 1  # Gravity pulls the player down
+
+    # Check if the player is on the ground
+    if world.player_character.y >= get_height() - 18:
+        world.player_character.y = get_height() - 18
+        jumping = False
+        Worker_Height = 0
+
 def player_border_stop(world: World):
     """ Stops player from going off screen """
     if world.player_character.x > get_width() - 5:
-        move_player_left(world)
+        world.player_character.x = get_width() - 18
     elif world.player_character.x < 5:
-        move_player_right(world)
+        world.player_character.x = 18
     if world.player_character.y < 20:
         world.player_character.y = 20
     elif world.player_character.y > get_height() - 18:
         world.player_character.y = get_height() - 18
 
+def player_ground_check(world: World):
+    """ Checks if player is on ground """
+    if colliding(world.player_character, world.ground):
+        world.player_character.y = world.ground.y - 25
+
 when("starting", create_world)
-when("updating", move_player_horizontal)
-when("typing", control_player_horizontal)
+when("typing", control_player_movement)
+when("updating", move_player)
 when("typing", control_player_jump)
+when("updating", player_jump)
 when("updating", player_border_stop)
 when("typing", control_player_down)
 when("updating", make_obstacles)
 when("updating", drop_obstacles)
 when("updating", destroy_obstacles)
 when(collide_with_obstacle, game_over, pause)
+when("updating", player_ground_check)
 start()

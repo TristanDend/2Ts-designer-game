@@ -11,6 +11,7 @@ record the players best time.
 - [x] Display game setting (building, floors, obstacles)
 - [x] Create game character
 - [x] Make character jump and move(left to right and right to left), user controls with keyboard
+- Phase 1 Demo Link: https://youtu.be/ESKKJJDGknc
 
 # Phase 2
 - [x ] Collision with obstacles(new floor and dying)
