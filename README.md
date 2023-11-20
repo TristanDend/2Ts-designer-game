@@ -15,7 +15,7 @@ record the players best time.
 
 # Phase 2
 - [x] Collision with obstacles(new floor and dying)
-- [ ] Infinitely scrolling screen
+- [x] Infinitely scrolling screen
 - [x] Randomly generating obstacles
 
 # Phase 3
