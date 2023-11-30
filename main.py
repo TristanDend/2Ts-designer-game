@@ -1,11 +1,7 @@
-import concurrent.futures
 from designer import *
 from dataclasses import dataclass
 from random import randint
 import pygame
-import time
-import threading
-from queue import Queue
 
 #on platform variable
 on_platform = False
@@ -33,7 +29,8 @@ fall_rate = 75
 @dataclass
 class World:
     game_over: DesignerObject
-    gaming_timer: DesignerObject
+    game_timer: DesignerObject
+    frame_timer: int
     player_character: DesignerObject
     obstacles: list[DesignerObject]
     platforms: list[DesignerObject]
@@ -42,7 +39,7 @@ def create_world() -> World:
     """ Creates the game world """
     return World(text("black", "", 30),
                  text("black", "0:00", 20, 25, 20),
-                 create_player(), [], [])
+                 0, create_player(), [], [])
 
 def create_platforms() -> DesignerObject:
     """ Creates platforms for the player """
@@ -51,7 +48,7 @@ def create_platforms() -> DesignerObject:
     return platform
 
 def make_platforms(world: World):
-    if len(world.platforms) < 5:# and game_time % 10 == 0:
+    if world.frame_timer % 60 == 0:
         world.platforms.append(create_platforms())
 
 def drop_platforms(world: World):
@@ -67,13 +64,16 @@ def destroy_platforms(world: World):
             destroy(platform)
     world.platforms = kept
 
-def player_on_platform(world: World):
+def player_on_platform(world: World, platform: DesignerObject):
     global on_platform
     if on_platform:
-        world.player_character.y = world.platforms[0].y - 15
+        world.player_character.y = platform.y - 18
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            on_platform = False
         if world.player_character.y > get_height() - 20:
             on_platform = False
-        if world.player_character.x < world.platforms[0].x or world.player_character.x > world.platforms[0].x + 300:
+        if world.player_character.x < platform.x or world.player_character.x > platform.x + 300:
             on_platform = False
             world.player_character.y += 10
 
@@ -149,15 +149,15 @@ def player_jump(world: World, key: str):
     global WORKER_HEIGHT, jumping, on_platform
 
     if key == "space" and not jumping:
-        WORKER_HEIGHT = -20  # Jumping impulse
+        WORKER_HEIGHT = -20
         jumping = True
 
     # Update player position
     world.player_character.y += WORKER_HEIGHT
 
-    # Gravity
+    # Starts pulling player down
     if jumping:
-        WORKER_HEIGHT += 1  # Gravity pulls the player down
+        WORKER_HEIGHT += 1
 
     # Check if the player is on a platform
     for platform in world.platforms:
@@ -165,7 +165,7 @@ def player_jump(world: World, key: str):
             if world.player_character.y >= platform.y - 3 and world.player_character.y <= platform.y + 3:
                 jumping = False
                 WORKER_HEIGHT = 0
-                on_platform = True
+                player_on_platform(world, platform)
 
     # Check if the player is on the ground
     if world.player_character.y >= get_height() - 20:
@@ -184,6 +184,7 @@ def player_border_stop(world: World):
     elif world.player_character.y > get_height() - 20:
         world.player_character.y = get_height() - 20
 
+
 def surviving_longer(world: World) -> bool:
     global game_time
     if game_time > 5:
@@ -194,21 +195,17 @@ def increase_difficulty():
     fall_rate = 50
 
 
-#def run_game_timer():
-#    global game_time
-#    time.sleep(1)
-#    game_time += 1
-#    minutes = str(game_time // 60)
-#    seconds = game_time % 60
-#    if seconds < 10:
-#        seconds = "0" + str(seconds)
-#    return minutes + ":" + str(seconds)
+def count_time(world: World):
+    global game_time
+    world.frame_timer += 1
+    if world.frame_timer % 30 == 0:
+        game_time += 1
+        minutes = str(game_time // 60)
+        seconds = game_time % 60
+        if seconds < 10:
+            seconds = "0" + str(seconds)
+        world.game_timer.text = minutes + ":" + str(seconds)
 
-#def update_game_timer(world: World):
-#    with concurrent.futures.ThreadPoolExecutor() as game_timer:
-#        game_timing = game_timer.submit(run_game_timer)
-#        gaming_time = game_timing.result()
-#        world.gaming_timer.text = gaming_time
 
 when("starting", create_world)
 when("typing", control_player_movement)
@@ -223,7 +220,8 @@ when("updating", make_obstacles)
 when("updating", drop_obstacles)
 when("updating", destroy_obstacles)
 when("updating", player_on_platform)
-#when("updating", update_game_timer)
+when("updating", count_time)
 when(collide_with_obstacle, game_over, pause)
 when(surviving_longer, increase_difficulty)
 start()
+
