@@ -24,6 +24,8 @@ game_time = 0
 #Determines how fast obstacles fall
 Obstacles_fall_speed = 5
 
+fall_rate = 75
+
 @dataclass
 class World:
     game_over: DesignerObject
@@ -86,7 +88,7 @@ def create_obstacles() -> DesignerObject:
 
 def make_obstacles(world: World):
     cap_obstacles = len(world.obstacles) < 11
-    random_chance = randint(1, 75) == 50
+    random_chance = randint(1, fall_rate) == 50
     if cap_obstacles and random_chance:
         world.obstacles.append(create_obstacles())
 
@@ -182,6 +184,17 @@ def player_border_stop(world: World):
     elif world.player_character.y > get_height() - 20:
         world.player_character.y = get_height() - 20
 
+
+def surviving_longer(world: World) -> bool:
+    global game_time
+    if game_time > 5:
+        return True
+
+def increase_difficulty():
+    global fall_rate
+    fall_rate = 50
+
+
 def count_time(world: World):
     global game_time
     world.frame_timer += 1
@@ -192,6 +205,7 @@ def count_time(world: World):
         if seconds < 10:
             seconds = "0" + str(seconds)
         world.game_timer.text = minutes + ":" + str(seconds)
+
 
 when("starting", create_world)
 when("typing", control_player_movement)
@@ -208,4 +222,6 @@ when("updating", destroy_obstacles)
 when("updating", player_on_platform)
 when("updating", count_time)
 when(collide_with_obstacle, game_over, pause)
+when(surviving_longer, increase_difficulty)
 start()
+
