@@ -68,7 +68,7 @@ def create_obstacles() -> DesignerObject:
 
 def make_obstacles(world: World):
     cap_obstacles = len(world.obstacles) < 26
-    random_chance = randint(1, world.fall_rate) == 10
+    random_chance = randint(1, world.fall_rate) == 5
     if cap_obstacles and random_chance:
         world.obstacles.append(create_obstacles())
 
@@ -169,14 +169,17 @@ def surviving_longer(world: World):
     if world.game_time == 5:
         world.fall_rate = 50
     elif world.game_time >= 6 and world.game_time <= 10:
-        world.fall_rate = 45
-    elif world.game_time >= 11 and world.game_time <= 20:
         world.fall_rate = 40
-    elif world.game_time >= 21 and world.game_time <= 30:
+        world.OBSTACLE_SPEED = 10
+    elif world.game_time >= 11 and world.game_time <= 20:
         world.fall_rate = 30
-    elif world.game_time > 30:
+        world.OBSTACLE_SPEED = 15
+    elif world.game_time >= 21 and world.game_time <= 30:
         world.fall_rate = 20
-
+        world.OBSTACLE_SPEED = 20
+    elif world.game_time > 30:
+        world.fall_rate = 10
+        world.OBSTACLE_SPEED = 25
 
 
 def count_time(world: World):
