@@ -170,12 +170,16 @@ def surviving_longer(world: World):
         world.fall_rate = 50
     elif world.game_time >= 6 and world.game_time <= 10:
         world.fall_rate = 45
+        world.OBSTACLE_SPEED = 10
     elif world.game_time >= 11 and world.game_time <= 20:
         world.fall_rate = 40
+        world.OBSTACLE_SPEED = 15
     elif world.game_time >= 21 and world.game_time <= 30:
         world.fall_rate = 30
+        world.OBSTACLE_SPEED = 20
     elif world.game_time > 30:
         world.fall_rate = 20
+        world.OBSTACLE_SPEED = 25
 
 
 
