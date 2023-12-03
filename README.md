@@ -26,19 +26,19 @@ Instructions
 - https://designer-edu.github.io/designer/
 - https://designer-edu.github.io/designer/examples/firefighter.html
 
-Phase 1
+# Phase 1
 - [x] Display game setting (building, floors, obstacles)
 - [x] Create game character
 - [x] Make character jump and move(left to right and right to left), user controls with keyboard
 - Phase 1 Demo Link: https://youtu.be/ESKKJJDGknc
 
-Phase 2
+# Phase 2
 - [x] Collision with obstacles(new floor and dying)
 - [x] Infinitely scrolling screen
 - [x] Randomly generating obstacles
 - Phase 2 Demo Link: https://youtu.be/0UGA0B-4q0M
 
-Phase 3
+# Phase 3
 - [x] Timer that stops when character dies and time
 - [x] Game over screen
 - [x] Game gets increasingly more difficult
