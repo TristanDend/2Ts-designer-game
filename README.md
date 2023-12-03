@@ -20,6 +20,6 @@ record the players best time.
 - Phase 2 Demo Link: https://youtu.be/0UGA0B-4q0M
 
 # Phase 3
-- [ ] Timer that stops when character dies and displays best time
-- [ ] Game over screen
-- [ ] Game gets increasingly more difficult
+- [x] Timer that stops when character dies and displays best time
+- [x] Game over screen
+- [x] Game gets increasingly more difficult
