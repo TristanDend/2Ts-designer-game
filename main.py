@@ -69,8 +69,8 @@ def create_obstacles() -> DesignerObject:
     return obstacle
 
 def make_obstacles(world: World):
-    cap_obstacles = len(world.obstacles) < 11
-    random_chance = randint(1, world.fall_rate) == 50
+    cap_obstacles = len(world.obstacles) < 26
+    random_chance = randint(1, world.fall_rate) == 5
     if cap_obstacles and random_chance:
         world.obstacles.append(create_obstacles())
 
@@ -178,12 +178,21 @@ def player_border_stop(world: World):
     elif world.player_character.y > get_height() - 20:
         world.player_character.y = get_height() - 20
 
-def surviving_longer(world: World) -> bool:
-    if world.game_time > 5:
-        return True
-
-def increase_difficulty(world: World):
-    world.fall_rate = 50
+def surviving_longer(world: World):
+    if world.game_time == 5:
+        world.fall_rate = 50
+    elif world.game_time >= 6 and world.game_time <= 10:
+        world.fall_rate = 40
+        world.OBSTACLE_SPEED = 10
+    elif world.game_time >= 11 and world.game_time <= 20:
+        world.fall_rate = 30
+        world.OBSTACLE_SPEED = 15
+    elif world.game_time >= 21 and world.game_time <= 30:
+        world.fall_rate = 20
+        world.OBSTACLE_SPEED = 20
+    elif world.game_time > 30:
+        world.fall_rate = 10
+        world.OBSTACLE_SPEED = 25
 
 def count_time(world: World):
     world.frame_timer += 1
@@ -217,5 +226,5 @@ when("updating", player_while_on_platform)
 when("updating", count_time)
 when(collide_with_obstacle, game_over, pause)
 when(floor_removal, game_over, pause)
-when(surviving_longer, increase_difficulty)
+when("updating", surviving_longer)
 start()
