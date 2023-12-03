@@ -13,7 +13,7 @@ When the player dies, a game over screen will be displayed and the player's time
 # Preview
 - Gameplay link:
 
-Instructions
+# Instructions
 - Left arrow key: move left
 - Right arrow key: move right
 - Space: jump
