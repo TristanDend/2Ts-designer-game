@@ -39,6 +39,6 @@ When the player dies, a game over screen will be displayed and the player's time
 - Phase 2 Demo Link: https://youtu.be/0UGA0B-4q0M
 
 # Phase 3
-- [x] Timer that stops when character dies and time
+- [x] Timer that stops when character dies and displays end time
 - [x] Game over screen
 - [x] Game gets increasingly more difficult
