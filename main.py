@@ -19,21 +19,23 @@ class World:
     PLATFORM_SPEED: int
     game_time: int
     OBSTACLE_SPEED: int
+    fall_rate: int
+    FALL_SPEED: int
+    platform_count: int
 
 def create_world() -> World:
     """ Creates the game world """
     return World(text("red", "", 30),
                  text("black", "0:00", 20, 25, 20),
-                 0, create_player(), [], [], True, False, 10, 0, False, 3, 0, 5)
+                 0, create_player(), [], [], True, False, 10, 0, False, 3, 0, 5, 75, 0, 0)
 
 def create_platforms() -> DesignerObject:
     """ Creates platforms for the player """
-    rand_x_coord = randint(0, 600)
-    platform = line("black", rand_x_coord, -5, rand_x_coord + 300, -5, 3)
+    platform = line("black", -1, -5, get_width() + 1, -5, 3)
     return platform
 
 def make_platforms(world: World):
-    if world.frame_timer % 60 == 0 and len(world.platforms) < 5:
+    if world.frame_timer % 60 == 0:
         world.platforms.append(create_platforms())
 
 def drop_platforms(world: World):
@@ -41,20 +43,21 @@ def drop_platforms(world: World):
         platform.y += world.PLATFORM_SPEED
 
 def teleport_platform(world: World):
-    for platform in world.platforms:
-        if platform.y > get_height() + 2 and world.frame_timer % 60 == 0:
-            platform.y = -180
+    try:
+        if world.platforms[world.platform_count].y > get_height() + 2 and world.frame_timer % 60 == 0:
+            world.platforms[world.platform_count].y = -180
+            world.on_platform = False
+    except:
+        pass
 
-def player_on_platform(world: World, platform: DesignerObject):
-    if world.on_platform:
-        world.player_character.y = platform.y - 18
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
-            world.on_platform = False
-        if world.player_character.y > get_height() - 20:
-            world.on_platform = False
-        if world.player_character.x < platform.x or world.player_character.x > platform.x + 300:
-            world.on_platform = False
+def player_on_platform(world: World):
+    try:
+        if world.player_character.y >= world.platforms[world.platform_count].y - 20 and world.player_character.y <= world.platforms[world.platform_count].y:
+            world.on_platform = True
+            cool_variable = world.platform_count
+            world.platform_count = cool_variable + 1
+    except:
+        pass
 
 def create_obstacles() -> DesignerObject:
     """ Creates obstacles for the player """
@@ -67,7 +70,7 @@ def create_obstacles() -> DesignerObject:
 
 def make_obstacles(world: World):
     cap_obstacles = len(world.obstacles) < 11
-    random_chance = randint(1, fall_rate) == 50
+    random_chance = randint(1, world.fall_rate) == 50
     if cap_obstacles and random_chance:
         world.obstacles.append(create_obstacles())
 
@@ -139,18 +142,30 @@ def player_jump(world: World, key: str):
         world.JUMP_HEIGHT += 1
 
     # Check if the player is on a platform
-    for platform in world.platforms:
-        if world.player_character.x >= platform.x and world.player_character.x <= platform.x + platform.width:
-            if world.player_character.y >= platform.y and world.player_character.y <= platform.y + platform.height:
-                world.jumping = False
-                world.JUMP_HEIGHT = 0
-                player_on_platform(world, platform)
-                world.floor_exists = False
+    try:
+        if colliding(world.player_character, world.platforms[world.platform_count]):#world.player_character.y >= world.platforms[world.platform_count].y - 20 and world.player_character.y <= world.platforms[world.platform_count].y:
+            world.jumping = False
+            world.JUMP_HEIGHT = 0
+            world.on_platform = True
+            world.floor_exists = False
+    except:
+        pass
 
     # Check if the player is on the ground
     if world.player_character.y >= get_height() - 20:
         world.jumping = False
         world.JUMP_HEIGHT = 0
+
+def player_while_on_platform(world: World):
+    try:
+        if world.on_platform:
+            world.player_character.y = world.platforms[world.platform_count].y - 20
+            cool_variable = world.platform_count
+            if world.jumping:
+                world.on_platform = False
+                world.platform_count = cool_variable + 1
+    except:
+        pass
 
 def player_border_stop(world: World):
     """ Stops player from going off screen """
@@ -163,16 +178,12 @@ def player_border_stop(world: World):
     elif world.player_character.y > get_height() - 20:
         world.player_character.y = get_height() - 20
 
-
 def surviving_longer(world: World) -> bool:
-    global game_time
-    if game_time > 5:
+    if world.game_time > 5:
         return True
 
-def increase_difficulty():
-    global fall_rate
-    fall_rate = 50
-
+def increase_difficulty(world: World):
+    world.fall_rate = 50
 
 def count_time(world: World):
     world.frame_timer += 1
@@ -202,6 +213,7 @@ when("updating", make_obstacles)
 when("updating", drop_obstacles)
 when("updating", destroy_obstacles)
 when("updating", player_on_platform)
+when("updating", player_while_on_platform)
 when("updating", count_time)
 when(collide_with_obstacle, game_over, pause)
 when(floor_removal, game_over, pause)
