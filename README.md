@@ -1,4 +1,4 @@
-Jumper
+# Jumper
 
 Our game has the user jump platforms and avoid falling obstacles.
 
