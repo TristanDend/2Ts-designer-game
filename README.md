@@ -2,7 +2,7 @@ Jumper
 
 Our game has the user jump platforms and avoid falling obstacles.
 
-About
+# About
 We created a game where the user has to avoid obstacles and climb an infinitely 
 scrolling screen. If one of the red triangles hits the player, the game ends. If the player is
 on a platform when it hits the ground, the game ends. The goal is to survive as long as possible
@@ -10,21 +10,21 @@ because the game times how long the player has been alive. The game gets more di
 the player survives because the obstacles will start falling faster and there will be more obstacles.
 When the player dies, a game over screen will be displayed and the player's time.
 
-Preview
-Gameplay link:
+# Preview
+- Gameplay link:
 
 Instructions
 - Left arrow key: move left
 - Right arrow key: move right
 - Space: jump
 
-Authors
-Tristan Dendorfer (tdendorf@udel.edu)
-Tyron Quarshie (tyronq@udel.edu)
+# Authors
+- Tristan Dendorfer (tdendorf@udel.edu)
+- Tyron Quarshie (tyronq@udel.edu)
 
-Acknowledgements
-https://designer-edu.github.io/designer/
-https://designer-edu.github.io/designer/examples/firefighter.html
+# Acknowledgements
+- https://designer-edu.github.io/designer/
+- https://designer-edu.github.io/designer/examples/firefighter.html
 
 Phase 1
 - [x] Display game setting (building, floors, obstacles)
