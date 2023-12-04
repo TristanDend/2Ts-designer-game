@@ -11,7 +11,7 @@ the player survives because the obstacles will start falling faster and there wi
 When the player dies, a game over screen will be displayed and the player's time.
 
 # Preview
-- Gameplay link:
+- Gameplay link: https://youtu.be/cRLFbTl9WDU
 
 # Instructions
 - Left arrow key: move left
@@ -42,3 +42,4 @@ When the player dies, a game over screen will be displayed and the player's time
 - [x] Timer that stops when character dies and displays end time
 - [x] Game over screen
 - [x] Game gets increasingly more difficult
+- Phase 3 Demo Link: https://youtu.be/_izLH0I7SiU
